@@ -11,6 +11,7 @@ Vagrant.configure("2") do |config|
 
   config.ssh.forward_agent = true
   config.vm.synced_folder ".", "/project", type: "nfs"
+  config.vm.provision "shell", path: "vagrant-setup.sh"
 
   config.vm.define "can-fly-slo" do |node|
     node.vm.network "forwarded_port", guest: 9090, host: 9090
