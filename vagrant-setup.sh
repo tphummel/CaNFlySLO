@@ -43,17 +43,34 @@ install_nodejs(){
 }
 
 install_sqlite3(){
-  echo "installing sqlite3"
+  # echo "installing sqlite3"
+  # wget https://sqlite.org/2021/sqlite-tools-linux-x86-3340100.zip -O ~/sqlite-tools-linux-x86-3340100.zip
+  # openssl dgst -sha3-256 ~/sqlite-tools-linux-x86-3340100.zip
+  # echo "should match: fc326726b5f5565636a526777bdc10de99bdeb19228055411ae5123116cc2cb2"
+  # from https://sqlite.org/download.html
+  # sha3sum explanation: https://sqlite.org/forum/info/34c57ee9b45390ea
 
+  # preinstalled in centos 8
+  which sqlite3
+  sqlite3 -version
 }
 
 install_flywaydb(){
   echo "installing flyway db"
+  wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/7.5.4/flyway-commandline-7.5.4-linux-x64.tar.gz | tar xvz && sudo ln -sf `pwd`/flyway-7.5.4/flyway /usr/local/bin
 
+  which flyway
+  flyway -v
 }
 
 install_litestream(){
   echo "installing litestream"
+
+  wget https://github.com/benbjohnson/litestream/releases/download/v0.3.2/litestream-v0.3.2-linux-amd64.tar.gz
+  tar -xf litestream-v0.3.2-linux-amd64.tar.gz -C ~/bin/
+
+  which litestream
+  litestream version
 }
 
 main
