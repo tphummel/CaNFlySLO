@@ -7,6 +7,14 @@ IFS=$'\n\t'
 
 main(){
   echo "hello!"
+
+  sudo dnf install --assumeyes wget
+
+  mkdir -p ~/bin
+  wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 -O ~/bin/jq
+  chmod u+x ~/bin/jq
+  chown -R vagrant:vagrant ~/bin
+
   install_caddy
   install_nodejs
   install_sqlite3
