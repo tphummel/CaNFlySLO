@@ -20,6 +20,7 @@ main(){
   install_sqlite3
   install_flywaydb
   install_litestream
+  enable_caddy_service
   echo "cleaning up!"
 }
 
@@ -29,6 +30,7 @@ install_caddy(){
   sudo dnf --assumeyes install 'dnf-command(copr)'
   sudo dnf --assumeyes copr enable @caddy/caddy
   sudo dnf --assumeyes install caddy
+
   which caddy
   caddy version
 }
@@ -71,6 +73,27 @@ install_litestream(){
 
   which litestream
   litestream version
+}
+
+install_cockpit(){
+  echo "installing cockpit"
+
+  sudo dnf --assumeyes install cockpit
+  sudo systemctl enable --now cockpit.socket
+}
+
+enable_caddy_service(){
+  echo "enabling caddy service"
+
+  # needed for local ca actions
+  sudo dnf --assumeyes install nss-tools
+
+  # allow caddy to run as non-root and still bind port 80 and 443
+  sudo setcap cap_net_bind_service=+ep /usr/bin/caddy
+
+  sudo cp /vagrant/caddy.vagrant.service /etc/systemd/system/caddy.service
+  sudo systemctl daemon-reload
+  sudo systemctl enable --now caddy.service
 }
 
 main
