@@ -2,3 +2,4 @@
 node_modules/
 .caddy-data/caddy
 *litestream/
+*.sqlite*

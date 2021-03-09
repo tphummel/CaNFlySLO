@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 
 const env = {
-  database: 'testdb',
+  database: 'customers',
   username: 'root',
   password: '12345',
   host: 'localhost',
@@ -21,6 +21,8 @@ const Sequelize = require('sequelize')
 const sequelize = new Sequelize(env.database, env.username, env.password, {
   host: env.host,
   dialect: env.dialect,
+  storage: './customers.sqlite3',
+  // storage: ':memory:',
   operatorsAliases: false,
 
   pool: {
@@ -31,9 +33,7 @@ const sequelize = new Sequelize(env.database, env.username, env.password, {
   }
 })
 
-sequelize.sync({ force: true }).then(() => {
-  console.log('Drop and Resync with { force: true }')
-})
+sequelize.sync()
 
 const Customer = sequelize.define('customer', {
   firstname: {

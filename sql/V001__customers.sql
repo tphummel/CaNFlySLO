@@ -1,0 +1,1 @@
+CREATE TABLE `customers` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `firstname` VARCHAR(255), `lastname` VARCHAR(255), `age` INTEGER, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL);

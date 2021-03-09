@@ -4,7 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "standard"
+    "test": "standard",
+    "dev":"nodemon -L index.js"
   },
   "license": "ISC",
   "dependencies": {
@@ -13,6 +14,7 @@
     "sqlite3": "^5.0.2"
   },
   "devDependencies": {
+    "nodemon": "^2.0.7",
     "standard": "^16.0.3"
   }
 }

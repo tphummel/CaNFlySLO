@@ -10,7 +10,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.ssh.forward_agent = true
-  config.vm.synced_folder ".", "/vagrant", type: "nfs"
+  config.vm.synced_folder ".", "/vagrant", type: "nfs", mount_options: ['actimeo=1']
   config.vm.provision "shell", path: "vagrant-setup.sh", privileged: false
 
   config.vm.define "can-fly-slo" do |node|

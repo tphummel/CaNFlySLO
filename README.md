@@ -14,7 +14,10 @@ vagrant up
 vagrant ssh
 cd /vagrant
 npm install
-node index.js
+
+flyway -user= -password= -locations="filesystem:./sql" -url="jdbc:sqlite:customers.sqlite3" migrate
+
+npm run dev
 ```
 
 from host, browse https://cfs.local/api/customers
