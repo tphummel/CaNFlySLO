@@ -10,10 +10,10 @@ main(){
 
   sudo dnf install --assumeyes wget
 
-  mkdir -p ~/bin
-  wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 -O ~/bin/jq
-  chmod u+x ~/bin/jq
-  chown -R vagrant:vagrant ~/bin
+  mkdir -p /home/vagrant/bin
+  wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 -O /home/vagrant/bin/jq
+  chmod u+x /home/vagrant/bin/jq
+  chown -R vagrant:vagrant /home/vagrant/bin
 
   install_caddy
   install_nodejs
@@ -56,8 +56,8 @@ install_nodejs(){
 
 install_sqlite3(){
   # echo "installing sqlite3"
-  # wget https://sqlite.org/2021/sqlite-tools-linux-x86-3340100.zip -O ~/sqlite-tools-linux-x86-3340100.zip
-  # openssl dgst -sha3-256 ~/sqlite-tools-linux-x86-3340100.zip
+  # wget https://sqlite.org/2021/sqlite-tools-linux-x86-3340100.zip -O /home/vagrant/sqlite-tools-linux-x86-3340100.zip
+  # openssl dgst -sha3-256 /home/vagrant/sqlite-tools-linux-x86-3340100.zip
   # echo "should match: fc326726b5f5565636a526777bdc10de99bdeb19228055411ae5123116cc2cb2"
   # from https://sqlite.org/download.html
   # sha3sum explanation: https://sqlite.org/forum/info/34c57ee9b45390ea
@@ -79,7 +79,7 @@ install_litestream(){
   echo "installing litestream"
 
   wget https://github.com/benbjohnson/litestream/releases/download/v0.3.2/litestream-v0.3.2-linux-amd64.tar.gz
-  tar -xf litestream-v0.3.2-linux-amd64.tar.gz -C ~/bin/
+  tar -xf litestream-v0.3.2-linux-amd64.tar.gz -C /home/vagrant/bin/
 
   which litestream
   litestream version
