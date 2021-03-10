@@ -20,6 +20,7 @@ main(){
   install_sqlite3
   install_flywaydb
   install_litestream
+  install_prometheus
   install_cockpit
   echo "cleaning up!"
 }
@@ -92,10 +93,35 @@ install_cockpit(){
   sudo systemctl enable --now cockpit.socket
 }
 
+install_prometheus(){
+  wget https://github.com/prometheus/prometheus/releases/download/v2.25.0/prometheus-2.25.0.linux-amd64.tar.gz
+  tar -xf prometheus-2.25.0.linux-amd64.tar.gz
+  sudo mv /home/vagrant/prometheus-2.25.0.linux-amd64/prometheus /usr/local/bin/prometheus
+  mkdir /home/vagrant/prometheus/
 
+  which prometheus
+  prometheus --version
 
+  sudo cp /vagrant/prometheus.vagrant.service /etc/systemd/system/prometheus.service
+  sudo chown root:root /etc/systemd/system/prometheus.service
+  sudo chmod 0644 /etc/systemd/system/prometheus.service
 
   sudo systemctl daemon-reload
+  sudo systemctl enable --now prometheus.service
+
+  wget https://github.com/prometheus/node_exporter/releases/download/v1.1.2/node_exporter-1.1.2.linux-amd64.tar.gz
+  tar xvfz node_exporter-1.1.2.linux-amd64.tar.gz
+  sudo mv /home/vagrant/node_exporter-1.1.2.linux-amd64/node_exporter /usr/local/bin/node_exporter
+
+  which node_exporter
+  node_exporter --version
+
+  sudo cp /vagrant/node_exporter.vagrant.service /etc/systemd/system/node_exporter.service
+  sudo chown root:root /etc/systemd/system/node_exporter.service
+  sudo chmod 0644 /etc/systemd/system/node_exporter.service
+
+  sudo systemctl daemon-reload
+  sudo systemctl enable --now node_exporter.service
 }
 
 main

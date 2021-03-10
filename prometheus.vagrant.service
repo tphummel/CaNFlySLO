@@ -1,0 +1,23 @@
+[Unit]
+Description=Prometheus
+Documentation=https://prometheus.io/
+After=network-online.target
+Requires=local-fs.target
+After=local-fs.target
+
+[Service]
+Type=simple
+User=vagrant
+WorkingDirectory=/home/vagrant/
+ExecStart=/usr/local/bin/prometheus \
+  --config.file /vagrant/prometheus.yml \
+  --web.listen-address="0.0.0.0:9091" \
+  --storage.tsdb.path=/home/vagrant/prometheus/ \
+  --storage.tsdb.retention.time="5d"
+ExecReload=/bin/kill -HUP $MAINPID
+SyslogIdentifier=prometheus
+Restart=always
+LimitNOFILE=65000
+
+[Install]
+WantedBy=multi-user.target

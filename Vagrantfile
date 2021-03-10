@@ -15,6 +15,9 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "can-fly-slo" do |node|
     node.vm.network "forwarded_port", guest: 9090, host: 9090
+    # p8s
+    node.vm.network "forwarded_port", guest: 9091, host: 9091
+    node.vm.network "forwarded_port", guest: 9100, host: 9100
     node.vm.network "private_network", ip: "192.168.13.4"
     node.vm.hostname = "cfs.local"
   end
