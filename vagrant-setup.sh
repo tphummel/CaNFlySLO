@@ -20,6 +20,7 @@ main(){
   install_sqlite3
   install_flywaydb
   install_litestream
+  install_cockpit
   echo "cleaning up!"
 }
 
