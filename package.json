@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
+    "prom-client": "^13.1.0",
     "sequelize": "^4.44.4",
     "sqlite3": "^5.0.2"
   },
