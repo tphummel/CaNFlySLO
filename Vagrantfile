@@ -14,6 +14,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", path: "vagrant-setup-ansible.sh", privileged: false
 
   config.vm.define "can-fly-slo" do |node|
+    # cockpit
     node.vm.network "forwarded_port", guest: 9090, host: 9090
     # p8s
     node.vm.network "forwarded_port", guest: 9091, host: 9091
