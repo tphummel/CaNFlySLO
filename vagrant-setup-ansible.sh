@@ -13,7 +13,8 @@ main(){
   which ansible
   ansible --version
 
-  ansible-playbook /vagrant/ansible/local.yml
+  ansible-galaxy install -r /vagrant/ansible/roles.yml
+  ansible-playbook -i /vagrant/ansible/inventory/localhost /vagrant/ansible/centos8.yml
 }
 
 main
