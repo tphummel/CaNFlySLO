@@ -14,6 +14,7 @@ main(){
   ansible --version
 
   ansible-galaxy install -r /vagrant/ansible/roles.yml
+  ansible-galaxy collection install -r /vagrant/ansible/collections.yml
   ansible-playbook -i /vagrant/ansible/inventory/localhost /vagrant/ansible/centos8.yml
 }
 

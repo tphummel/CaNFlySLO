@@ -4,6 +4,10 @@
     become_user: root
     hosts: all
     tasks:
+      - name: set selinux to permissive
+        ansible.posix.selinux:
+          policy: targeted
+          state: permissive
       - name: Install the latest version of supporting tools
         dnf:
           name:
@@ -60,7 +64,16 @@
     become: yes
     become_user: root
     handlers:
-      - include_tasks: handlers/main.yml
+      - name: Restart caddy
+        systemd:
+          daemon_reload: true
+          name: caddy
+          state: restarted
+
+      - name: Reload caddy
+        systemd:
+          name: caddy
+          state: reloaded
     tasks:
       - name: install first set of caddy libs
         dnf:
