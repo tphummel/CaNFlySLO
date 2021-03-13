@@ -35,13 +35,14 @@
     hosts: all
     become: yes
     become_user: root
+    tags: ["p8s"]
     roles:
       - cloudalchemy.prometheus
     vars:
       prometheus_web_listen_address: "0.0.0.0:9091"
       prometheus_version: 2.25.0
       prometheus_storage_retention: "2d"
-      prometheus_scrape_jobs:
+      prometheus_scrape_configs:
         - job_name: "node"
           static_configs:
             - targets:
