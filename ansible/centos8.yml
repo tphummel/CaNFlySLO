@@ -1,0 +1,138 @@
+---
+  - name: setup general vm tasks
+    become: yes
+    become_user: root
+    hosts: all
+    tasks:
+      - name: set selinux to permissive
+        ansible.posix.selinux:
+          policy: targeted
+          state: permissive
+      - name: Install the latest version of supporting tools
+        dnf:
+          name:
+            - wget
+            - cockpit
+          state: latest
+      - name: start and enable cockpit service
+        systemd:
+          name: cockpit.socket
+          state: started
+          enabled: yes
+  - name: node.js
+    hosts: all
+    become: yes
+    become_user: root
+    tasks:
+      - name: enable node.js dnf module
+        command: dnf --assumeyes module enable nodejs:14
+      - name: install node.js
+        dnf:
+          name: nodejs
+          state: latest
+
+  - name: prometheus
+    hosts: all
+    become: yes
+    become_user: root
+    roles:
+      - cloudalchemy.prometheus
+    vars:
+      prometheus_web_listen_address: "0.0.0.0:9091"
+      prometheus_version: 2.25.0
+      prometheus_storage_retention: "2d"
+      prometheus_scrape_jobs:
+        - job_name: "node"
+          static_configs:
+            - targets:
+              - "localhost:9100"
+        - job_name: "nodejs"
+          static_configs:
+            - targets:
+              - "localhost:8081"
+        - job_name: "caddy"
+          static_configs:
+            - targets:
+              - "localhost:2019"
+        - job_name: "p8s"
+          static_configs:
+            - targets:
+              - "localhost:9091"
+
+  - name: caddy
+    hosts: all
+    become: yes
+    become_user: root
+    handlers:
+      - name: Restart caddy
+        systemd:
+          daemon_reload: true
+          name: caddy
+          state: restarted
+
+      - name: Reload caddy
+        systemd:
+          name: caddy
+          state: reloaded
+    tasks:
+      - name: install first set of caddy libs
+        dnf:
+          name:
+            - nss-tools
+            - 'dnf-command(copr)'
+          state: latest
+
+      # temporary until ansible 2.10 adds copr module
+      # https://github.com/ansible/ansible/issues/26673
+      - name: enable copr caddy
+        become: yes
+        become_user: root
+        command: dnf --assumeyes copr enable @caddy/caddy
+
+      - name: install caddy libs
+        dnf:
+          name:
+            - caddy
+          state: latest
+
+      - name: Set capability on the binary file to be able to bind to TCP port <1024
+        capabilities:
+          path: /usr/bin/caddy
+          capability: cap_net_bind_service+eip
+          state: present
+
+      - name: Template systemd service
+        template:
+          src: caddy.service.j2
+          dest: /etc/systemd/system/caddy.service
+          owner: root
+          group: root
+          mode: 0644
+        notify:
+          - Restart caddy
+
+      - name: Ensue caddy service is up-to-date before starting it
+        meta: flush_handlers
+
+      - name: start and enable caddy service
+        systemd:
+          name: caddy.service
+          state: started
+          daemon_reload: yes
+          enabled: yes
+
+  - name: node exporter
+    hosts: all
+    become: yes
+    become_user: root
+    roles:
+      - cloudalchemy.node_exporter
+    vars: []
+
+  - name: process exporter
+    hosts: all
+    become: yes
+    become_user: root
+    roles:
+      - cloudalchemy.process_exporter
+    vars: []

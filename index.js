@@ -3,6 +3,9 @@ const app = express()
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 
+const p8s = require('prom-client')
+p8s.collectDefaultMetrics()
+
 const env = {
   database: 'customers',
   username: 'root',
@@ -85,6 +88,15 @@ app.delete('/api/customers/:customerId', (req, res) => {
   }).then(() => {
     res.status(200).send('deleted successfully a customer with id = ' + id)
   })
+})
+
+app.get('/metrics', async (req, res) => {
+  try {
+    res.set('Content-Type', p8s.register.contentType)
+    res.end(await p8s.register.metrics())
+  } catch (ex) {
+    res.status(500).end(ex)
+  }
 })
 
 const server = app.listen(8081, function () {
