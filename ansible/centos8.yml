@@ -12,8 +12,17 @@
         dnf:
           name:
             - wget
-            - cockpit
           state: latest
+  - name: setup cockpit
+    become: yes
+    become_user: root
+    hosts: all
+    tasks:
+      - name: Install cockpit
+        dnf:
+          name:
+            - cockpit
+          state: present
       - name: start and enable cockpit service
         systemd:
           name: cockpit.socket
