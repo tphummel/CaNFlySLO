@@ -82,6 +82,10 @@
           static_configs:
             - targets:
               - "localhost:9091"
+        - job_name: "process"
+          static_configs:
+            - targets:
+              - "localhost:9256"
 
   - name: caddy
     hosts: all
