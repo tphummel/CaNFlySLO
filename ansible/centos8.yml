@@ -13,6 +13,20 @@
           name:
             - wget
           state: latest
+
+  - name: setup journald
+    become: yes
+    become_user: root
+    hosts: all
+    tasks:
+      - name: create journald persistence dir
+        ansible.builtin.file:
+          path: /var/log/journal
+          owner: root
+          group: root
+          state: directory
+          mode: '0755'
+
   - name: setup cockpit
     become: yes
     become_user: root
