@@ -1,0 +1,19 @@
+CREATE TABLE user (
+  id INTEGER PRIMARY KEY,
+  email TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT DEFAULT NULL
+);
+
+CREATE INDEX user_email ON user(email);
+
+CREATE TABLE player (
+  id INTEGER PRIMARY KEY,
+  handle TEXT NOT NULL,
+  fullname TEXT DEFAULT NULL,
+  avatar BLOB DEFAULT NULL,
+  created_by INTEGER DEFAULT NULL,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT DEFAULT NULL,
+  FOREIGN KEY(created_by) REFERENCES user(id)
+);
