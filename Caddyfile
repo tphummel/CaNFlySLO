@@ -1,4 +1,8 @@
 cfs.local {
   tls internal
   reverse_proxy localhost:8081
+  log {
+    output stderr
+    format json
+  }
 }
