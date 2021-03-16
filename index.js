@@ -1,107 +1,100 @@
-const express = require('express')
-const app = express()
-const bodyParser = require('body-parser')
-app.use(bodyParser.json())
+const path = require('path')
+const createServer = require('http-hash-server')
+const formBody = require('body/form')
+
+const waterfall = require('run-waterfall')
 
 const p8s = require('prom-client')
 p8s.collectDefaultMetrics()
 
-const env = {
-  database: 'customers',
-  username: 'root',
-  password: '12345',
-  host: 'localhost',
-  dialect: 'sqlite',
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
+const sql = require('sqlite3')
+
+var dbFile = process.env.DBFILE || path.join(__dirname, 'tad.sqlite3')
+var db = new sql.Database(dbFile)
+
+const user = {
+  create: function (email, cb) {
+    const sql = 'INSERT INTO user (email) VALUES (?)'
+
+    const params = [
+      email
+    ]
+
+    db.run(sql, params, cb)
   }
 }
 
-const Sequelize = require('sequelize')
-const sequelize = new Sequelize(env.database, env.username, env.password, {
-  host: env.host,
-  dialect: env.dialect,
-  storage: './customers.sqlite3',
-  // storage: ':memory:',
-  operatorsAliases: false,
+const userRoutes = {
+  post: (req, res, opts) => {
+    waterfall([
+      (cb) => {
+        return formBody(req, cb)
+      },
+      (body, cb) => {
+        console.log(body)
+        // form data not actually decoding
+        /*
+        {
+          '--------------------------73a4d03446b58264\r\nContent-Disposition: form-data; name': '"email"\r\n' +
+            '\r\n' +
+            'tphummel@gmail.com\r\n' +
+            '--------------------------73a4d03446b58264--\r\n'
+        }
 
-  pool: {
-    max: env.max,
-    min: env.pool.min,
-    acquire: env.pool.acquire,
-    idle: env.pool.idle
+        */
+        // return user.create(body.email, cb)
+        return user.create('tphummel@gmail.com', cb)
+      }
+    ], (err) => {
+      if (err) {
+        res.responseCode = 500
+      } else {
+        res.responseCode = 201
+      }
+      res.end()
+    })
+  }
+}
+
+const host = '127.0.0.1'
+const port = 8081
+
+const server = createServer({
+  hostname: host,
+  port: port,
+  services: {
+    user: {
+      route: '/',
+      methods: {
+        create: {
+          httpMethod: 'POST',
+          route: '/user',
+          handler: userRoutes.post
+        }
+      }
+    },
+    metrics: {
+      route: '/',
+      methods: {
+        get: {
+          httpMethod: 'GET',
+          route: '/metrics',
+          handler: async (req, res, opts) => {
+            try {
+              res.setHeader('Content-Type', p8s.register.contentType)
+              res.statusCode = 200
+              res.end(await p8s.register.metrics(), 'utf8')
+            } catch (ex) {
+              res.statusCode = 500
+              res.end(ex)
+            }
+          }
+        }
+      }
+    }
   }
 })
 
-sequelize.sync()
-
-const Customer = sequelize.define('customer', {
-  firstname: {
-    type: Sequelize.STRING
-  },
-  lastname: {
-    type: Sequelize.STRING
-  },
-  age: {
-    type: Sequelize.INTEGER
-  }
-})
-
-app.post('/api/customers', (req, res) => {
-  Customer.create({
-    firstname: req.body.firstname,
-    lastname: req.body.lastname,
-    age: req.body.age
-  }).then(customer => {
-    res.send(customer)
-  })
-})
-
-app.get('/api/customers', (req, res) => {
-  Customer.findAll().then(customers => {
-    res.send(customers)
-  })
-})
-
-app.get('/api/customers/:customerId', (req, res) => {
-  Customer.findById(req.params.customerId).then(customer => {
-    res.send(customer)
-  })
-})
-
-app.put('/api/customers/:customerId', (req, res) => {
-  const id = req.params.customerId
-  Customer.update({ firstname: req.body.firstname, lastname: req.body.lastname, age: req.body.age },
-    { where: { id: req.params.customerId } }
-  ).then(() => {
-    res.status(200).send('updated successfully a customer with id = ' + id)
-  })
-})
-
-app.delete('/api/customers/:customerId', (req, res) => {
-  const id = req.params.customerId
-  Customer.destroy({
-    where: { id: id }
-  }).then(() => {
-    res.status(200).send('deleted successfully a customer with id = ' + id)
-  })
-})
-
-app.get('/metrics', async (req, res) => {
-  try {
-    res.set('Content-Type', p8s.register.contentType)
-    res.end(await p8s.register.metrics())
-  } catch (ex) {
-    res.status(500).end(ex)
-  }
-})
-
-const server = app.listen(8081, function () {
-  const host = server.address().address
-  const port = server.address().port
-
+server.listen((err) => {
   console.log('App listening at http://%s:%s', host, port)
 })
