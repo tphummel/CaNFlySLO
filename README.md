@@ -15,7 +15,7 @@ vagrant ssh
 cd /vagrant
 npm install
 
-flyway -user= -password= -locations="filesystem:./sql" -url="jdbc:sqlite:tad.sqlite3" migrate
+flyway -user= -password= -locations="filesystem:./sql" -url="jdbc:sqlite:app.sqlite3" migrate
 
 npm run dev
 ```

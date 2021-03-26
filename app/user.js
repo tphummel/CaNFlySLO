@@ -5,9 +5,11 @@ const db = require('./db')
 const user = {
   create: function (email, cb) {
     const sql = 'INSERT INTO user (email) VALUES (?)'
-    const params = [email]
-
-    db.run(sql, params, cb)
+    db.run(sql, [email], cb)
+  },
+  getByEmail: function (email, cb) {
+    const sql = 'SELECT * FROM user WHERE email = ?'
+    db.get(sql, [email], cb)
   }
 }
 
