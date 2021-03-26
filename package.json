@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "standard",
-    "dev": "nodemon -L index.js"
+    "dev": "nodemon -L index.js",
+    "fix": "standard --fix",
+    "test": "standard && NODE_ENV=test tap --bail --reporter classic --coverage-report=text-summary app/*.test.js",
+    "cov": "NODE_ENV=test tap --bail --reporter classic --coverage-report=html app/*.test.js"
   },
   "license": "ISC",
   "dependencies": {
@@ -17,6 +19,7 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.7",
-    "standard": "^16.0.3"
+    "standard": "^16.0.3",
+    "tap": "^14.11.0"
   }
 }

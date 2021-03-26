@@ -3,3 +3,7 @@ node_modules/
 .caddy-data/caddy
 *litestream/
 *.sqlite*
+*.log
+.nyc_output
+coverage
+tmp/
