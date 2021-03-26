@@ -9,6 +9,7 @@
           policy: targeted
           state: permissive
       - name: Install the latest version of supporting tools
+        tags: ["flywaydb"]
         dnf:
           name:
             - wget
@@ -53,7 +54,16 @@
         dnf:
           name: nodejs
           state: latest
-
+  - name: flywaydb
+    hosts: all
+    tags: ["flywaydb"]
+    tasks:
+      - name: install flywaydb
+        shell: wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/7.5.4/flyway-commandline-7.5.4-linux-x64.tar.gz | tar xvz --directory /home/vagrant
+      - name: link flywaydb
+        become: yes
+        become_user: root
+        shell: ln -sf /home/vagrant/flyway-7.5.4/flyway /usr/local/bin
   - name: prometheus
     hosts: all
     become: yes
