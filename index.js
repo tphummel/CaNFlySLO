@@ -1,7 +1,5 @@
 'use strict'
 
-const port = 8081
-
 const express = require('express')
 const app = express()
 app.use(require('body-parser').urlencoded({ extended: true }))
@@ -22,6 +20,24 @@ app.get('/metrics', async (req, res, opts) => {
   }
 })
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
+function start (app, port, cb) {
+  return app.listen(port, cb)
+}
+
+function close (server, cb) {
+  return server.close()
+}
+
+module.exports = {
+  app: app,
+  start: start,
+  close: close
+}
+
+if (!module.parent) {
+  const port = process.env.PORT || 8081
+  start(app, port, (err) => {
+    if (err) console.error(err) && process.exit(1)
+    console.log(`listening on port ${port}`)
+  })
+}
