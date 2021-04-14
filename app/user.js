@@ -17,7 +17,7 @@ const userRoutes = {
   post: (req, res, opts) => {
     user.create(req.body.email, (err) => {
       if (err) {
-        res.status(500).end(err)
+        res.status(500).end()
       } else {
         res.status(201).end()
       }
