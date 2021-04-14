@@ -4,6 +4,12 @@ const express = require('express')
 const app = express()
 app.use(require('body-parser').urlencoded({ extended: true }))
 
+app.get('/', (req, res, opts) => {
+  res.setHeader('Content-Type', 'text/html')
+  res.statusCode = 200
+  res.end('<html></html>', 'utf8')
+})
+
 const { userRoutes } = require('./app/user')
 app.post('/users', userRoutes.post)
 

@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "nodemon -L index.js",
     "fix": "standard --fix",
-    "test": "standard && NODE_ENV=test tap --bail --reporter classic --coverage-report=text-summary app/*.test.js",
-    "cov": "NODE_ENV=test tap --bail --reporter classic --coverage-report=html app/*.test.js"
+    "test": "standard && NODE_ENV=test tap --bail --reporter classic --coverage-report=text-summary *.test.js app/*.test.js",
+    "cov": "NODE_ENV=test tap --bail --reporter classic --coverage-report=html *.test.js app/*.test.js"
   },
   "license": "ISC",
   "dependencies": {
