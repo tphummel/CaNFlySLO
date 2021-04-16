@@ -3,6 +3,8 @@
 const express = require('express')
 const app = express()
 app.use(require('body-parser').urlencoded({ extended: true }))
+app.use(require('morgan')('combined'))
+app.use(require('helmet')())
 
 app.get('/', (req, res, opts) => {
   res.setHeader('Content-Type', 'text/html')
