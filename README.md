@@ -26,3 +26,12 @@ successful response:
 ```
 []
 ```
+
+## k6 smoke test locally
+
+Follow dev quickstart above, ensure the dev server is running.
+
+```
+brew install k6
+k6 run k6/local-smoke.js
+```
