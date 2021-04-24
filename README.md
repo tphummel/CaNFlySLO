@@ -20,11 +20,29 @@ flyway -user= -password= -locations="filesystem:./sql" -url="jdbc:sqlite:app.sql
 npm run dev
 ```
 
-from host, browse https://cfs.local/api/customers
+from host, browse https://cfs.local/
 
-successful response:
+or
+
 ```
-[]
+curl -4 -v https:/cfs.local
+```
+
+### local tls certificate (dev)
+
+You'll start getting tls warnings in your browser or `curl`.
+
+from host:
+
+```
+XDG_DATA_HOME=`pwd`/.caddy-data caddy untrust
+rm -rf .caddy-data
+XDG_DATA_HOME=`pwd`/.caddy-data caddy trust
+
+# not totally sure these are requierd
+vagrant reload
+vagrant ssh
+sudo systemctl restart caddy
 ```
 
 ## k6 smoke test locally
