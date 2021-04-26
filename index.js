@@ -8,8 +8,9 @@ app.use(require('body-parser').urlencoded({ extended: true }))
 app.use(require('helmet')())
 app.use(require('cookie-parser')())
 
-const Token = require('./app/token.js')
-const Customer = require('./app/customer.js')
+const Token = require('./app/token')
+const Customer = require('./app/customer').customer
+const Email = require('./app/email')
 
 // custom flash middlware: https://gist.github.com/brianmacarthur/a4e3e0093d368aa8e423
 app.use((req, res, next) => {
@@ -79,12 +80,17 @@ app.post('/login', (req, res) => {
       if (customer) return setImmediate(cb, null, { customer })
 
       Customer.create(inputEmail, function (err, createdCustomer) {
-        return cb(err, { createdCustomer })
+        return cb(err, { customer: createdCustomer })
       })
     },
     function createLoginToken ({ customer }, cb) {
       Token.createLoginToken(customer, (err, token) => {
         return cb(err, { customer, token })
+      })
+    },
+    function sendLoginEmailToCustomer ({ customer, token }, cb) {
+      Email.sendLoginEmail({ customer, token }, (err) => {
+        return cb(err, { customer })
       })
     }
   ], function (err, { customer }) {
