@@ -34,6 +34,7 @@ const middlewares = {
     secret: process.env.SESSION_JWT_SECRET || 'session-cookie-secret',
     algorithms: ['HS256'],
     credentialsRequired: true,
+    requestProperty: 'customer',
     getToken: (req) => {
       if (req.cookies) return req.cookies.sessionPayload
       return null

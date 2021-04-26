@@ -102,6 +102,17 @@ app.post('/login', (req, res) => {
   })
 })
 
+app.get('/home', Token.middlewares.sessionToken, (req, res) => {
+  return res.send(`
+    ${res.locals.flash
+  ? `<p>${res.locals.flash.type}: ${res.locals.flash.message}</p>`
+  : ''
+}
+    <p>/home</p>
+    <p>logged in as: ${req.customer.email}</p>
+  `)
+})
+
 const { customerRoutes } = require('./app/customer')
 app.post('/customers', customerRoutes.post)
 
