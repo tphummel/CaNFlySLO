@@ -23,7 +23,6 @@ app.use(require('body-parser').urlencoded({ extended: true }))
 app.use(require('helmet')())
 app.use(require('cookie-parser')())
 
-
 const Token = require('./app/token')
 const Customer = require('./app/customer').customer
 const Email = require('./app/email')
