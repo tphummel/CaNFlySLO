@@ -7,6 +7,7 @@
     "dev": "NODE_ENV=dev nodemon -L index.js",
     "fix": "standard --fix",
     "test": "standard && NODE_ENV=test tap --bail --reporter classic --coverage-report=text-summary *.test.js app/*.test.js",
+    "ton": "NODE_ENV=test tap --only --reporter classic --coverage-report=text-summary *.test.js app/*.test.js",
     "cov": "NODE_ENV=test tap --bail --reporter classic --coverage-report=html *.test.js app/*.test.js"
   },
   "license": "ISC",
