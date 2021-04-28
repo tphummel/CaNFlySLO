@@ -1,13 +1,14 @@
 'use strict'
 
-const lib = require('./token')
 const tap = require('tap')
 const jwt = require('jsonwebtoken')
 
 tap.test('createLoginToken', function (t) {
   const email = 'tohu@hey.com'
 
-  process.env.LOGIN_JWT_SECRET = 'tokenUnitTest1'
+  process.env.LOGIN_JWT_SECRET = 'tokenUnitTest1a'
+  process.env.SESSION_JWT_SECRET = 'tokenUnitTest1b'
+  const lib = require('./token')
 
   lib.createLoginToken({ email }, (err, token) => {
     t.ifErr(err)
@@ -25,7 +26,9 @@ tap.test('createLoginToken', function (t) {
 tap.test('createSessionToken', function (t) {
   const email = 'tohu@hey.com'
 
-  process.env.SESSION_JWT_SECRET = 'tokenUnitTest2'
+  process.env.LOGIN_JWT_SECRET = 'tokenUnitTest2a'
+  process.env.SESSION_JWT_SECRET = 'tokenUnitTest2b'
+  const lib = require('./token')
 
   lib.createSessionToken({ email }, (err, token) => {
     t.ifErr(err)

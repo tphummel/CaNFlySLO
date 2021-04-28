@@ -1,5 +1,18 @@
 'use strict'
 
+if (process.env.NODE_ENV === 'dev') {
+  process.env.LOGIN_JWT_SECRET = '123123'
+  process.env.SESSION_JWT_SECRET = 'abcsdf'
+} else {
+  if (!process.env.LOGIN_JWT_SECRET || !process.env.SESSION_JWT_SECRET) {
+    console.error(`NODE_ENV=${process.env.NODE_ENV}
+      Environment Variables not set:
+      LOGIN_JWT_SECRET=${process.env.LOGIN_JWT_SECRET}
+      SESSION_JWT_SECRET=${process.env.SESSION_JWT_SECRET}
+      Set both of those variables or the server cannot start`)
+  }
+}
+
 const express = require('express')
 const { v4: uuidv4 } = require('uuid')
 const morgan = require('morgan')
@@ -162,6 +175,7 @@ module.exports = {
   close: close
 }
 
+// this file is being used directly, not included as a module for testing
 if (!module.parent) {
   const port = process.env.PORT || 8081
   start(app, port, (err) => {

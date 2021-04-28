@@ -21,7 +21,7 @@ function createSessionToken (customer, cb) {
 
 const middlewares = {
   loginToken: expressJwt({
-    secret: process.env.LOGIN_JWT_SECRET || 'login-token-secret',
+    secret: process.env.LOGIN_JWT_SECRET,
     algorithms: ['HS256'],
     requestProperty: 'loginToken',
     credentialsRequired: true,
@@ -31,7 +31,7 @@ const middlewares = {
     }
   }),
   sessionToken: expressJwt({
-    secret: process.env.SESSION_JWT_SECRET || 'session-cookie-secret',
+    secret: process.env.SESSION_JWT_SECRET,
     algorithms: ['HS256'],
     credentialsRequired: true,
     requestProperty: 'customer',
