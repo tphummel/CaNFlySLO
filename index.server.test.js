@@ -10,8 +10,8 @@ const getPort = require('./app/util/get-open-port.js')
 const dbTestUtils = require('./app/util/db-test.js')
 
 tap.test('GET /', function (t) {
-  process.env.LOGIN_JWT_SECRET = 'asdsdfdfgfgh'
-  process.env.SESSION_JWT_SECRET = 'zxcxcvcvbvbbnm'
+  process.env.LOGIN_JWT_SECRET = uuidv4()
+  process.env.SESSION_JWT_SECRET = uuidv4()
 
   const lib = require('./index.js')
   const dbfile = dbTestUtils.getFilename()
