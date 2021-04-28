@@ -43,8 +43,10 @@ app.use((req, res, next) => {
 })
 
 // hide request logging when running automated tests
-if (process.env.NODE_ENV !== 'test') {
-  app.use(morgan('combined'))
+if (process.env.NODE_ENV === 'dev') {
+  app.use(morgan('dev'))
+} else if (process.env.NODE_ENV === 'production') {
+  app.use(morgan('short'))
 }
 
 app.get('/', (req, res) => {
