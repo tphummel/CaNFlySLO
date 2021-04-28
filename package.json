@@ -20,7 +20,8 @@
     "morgan": "^1.10.0",
     "prom-client": "^13.1.0",
     "run-waterfall": "^1.1.7",
-    "sqlite3": "^5.0.2"
+    "sqlite3": "^5.0.2",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.7",

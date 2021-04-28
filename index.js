@@ -1,6 +1,7 @@
 'use strict'
 
 const express = require('express')
+const { v4: uuidv4 } = require('uuid')
 const morgan = require('morgan')
 const waterfall = require('run-waterfall')
 const app = express()
@@ -8,6 +9,7 @@ const app = express()
 app.use(require('body-parser').urlencoded({ extended: true }))
 app.use(require('helmet')())
 app.use(require('cookie-parser')())
+
 
 const Token = require('./app/token')
 const Customer = require('./app/customer').customer
@@ -20,6 +22,11 @@ app.use((req, res, next) => {
     res.locals.flash = req.cookies.flash
     res.clearCookie('flash')
   }
+  return next()
+})
+
+app.use((req, res, next) => {
+  res.setHeader('X-Request-Id', uuidv4())
   return next()
 })
 
