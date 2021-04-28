@@ -118,7 +118,18 @@ app.get('/home', Token.middlewares.sessionToken, (req, res) => {
 }
     <p>/home</p>
     <p>logged in as: ${req.customer.email}</p>
+    <p><form method="post" action="/logout"><input type="submit" value="Logout" /></form></p>
   `)
+})
+
+app.post('/logout', Token.middlewares.sessionToken, (req, res) => {
+  res.clearCookie('sessionPayload')
+  res.cookie('flash', {
+    type: 'success',
+    message: 'logout successful'
+  })
+  res.set('location', '/login')
+  return res.status(302).send('/logout')
 })
 
 const { customerRoutes } = require('./app/customer')
