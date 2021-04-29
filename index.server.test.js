@@ -162,3 +162,43 @@ tap.test('POST /login with empty email', function (t) {
     t.end()
   })
 })
+
+tap.test('POST /login with malformed email', function (t) {
+  process.env.LOGIN_JWT_SECRET = uuidv4()
+  process.env.SESSION_JWT_SECRET = uuidv4()
+
+  const lib = require('./index.js')
+  const dbfile = dbTestUtils.getFilename()
+  process.env.DBFILE = dbfile
+
+  waterfall([
+    (cb) => { dbTestUtils.setup(dbfile, cb) },
+    // gotcha: getPort doesn't use standard errback pattern, for reasons.
+    (stdout, stderr, cb) => { getPort((port) => { return cb(null, port) }) },
+    (port, cb) => {
+      const server = lib.start(lib.app, port, (err) => {
+        t.ifErr(err)
+
+        get.post({
+          url: url.format({
+            protocol: 'http',
+            hostname: 'localhost',
+            pathname: '/login',
+            port: port
+          }),
+          form: {
+            email: 'not-a-valid.email'
+          }
+        }, (err, res) => {
+          t.ifErr(err)
+          t.equal(res.statusCode, 422)
+
+          server.close(cb)
+        })
+      })
+    }
+  ], (err) => {
+    t.ifErr(err)
+    t.end()
+  })
+})
