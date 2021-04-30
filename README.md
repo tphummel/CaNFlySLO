@@ -52,4 +52,5 @@ Follow dev quickstart above, ensure the dev server is running.
 ```
 brew install k6
 k6 run k6/local-smoke.js
+k6 run --vus 1 --duration 1m k6/local-e2e.js
 ```
