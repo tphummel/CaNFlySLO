@@ -1,10 +1,9 @@
 import http from 'k6/http'
-import { check, sleep } from 'k6'
+import { check } from 'k6'
 
 const BASE_URL = 'https://cfs.local'
 
 export default () => {
-
   const root = http.get(`${BASE_URL}/`)
   check(root, {
     'is status 200': (r) => r.status === 200
@@ -15,7 +14,7 @@ export default () => {
     'is status 200': (r) => r.status === 200
   })
 
-  const loginSubmit = http.post(`${BASE_URL}/login`, {email: 'tohu@hey.com'})
+  const loginSubmit = http.post(`${BASE_URL}/login`, { email: 'tohu@hey.com' })
   check(loginSubmit, {
     'is status 202': (r) => r.status === 202
   })
@@ -26,7 +25,16 @@ export default () => {
   const loginToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRvaHVAaGV5LmNvbSIsImlhdCI6MTYxOTc1NTM3NX0.w6e8rrcHKOsQf_RvvM_OURjxTuTWM-EKfCsr0LjFGbI'
 
   const verify = http.get(`${BASE_URL}/login/verify?token=${loginToken}`)
+
   check(verify, {
-    'is status 200': (r) => r.status === 200
+    'is status 200': (r) => r.status === 200,
+    'on successful login/verify, redirect to /home': (r) => r.url === `${BASE_URL}/home`
+  })
+
+  const logout = http.post(`${BASE_URL}/logout`)
+
+  check(logout, {
+    'is status 200': (r) => r.status === 200,
+    'on successful logout, redirect to /login': (r) => r.url === `${BASE_URL}/login`
   })
 }
