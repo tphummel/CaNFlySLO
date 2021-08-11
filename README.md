@@ -1,5 +1,17 @@
 # CaNFlySLO
 
+> ✨The “CaNFlySLO” stack 🛫
+> - Caddy
+> - Node.js + Hotwire.dev
+> - FlywayDB
+> - SQLite
+> - Litestream
+> - (S3 compatible) Object Store
+> 
+> Single VM. No containers. Systemd managed. Cockpit, p8s, fluentbit. Ansible. Vagrant for local dev
+> 
+> &mdash; Tom Hummel (@tphummel) [April 22, 2021](https://twitter.com/tphummel/status/1385226694647107585)
+
 ## Development Quickstart (Mac OS)
 
 ```
