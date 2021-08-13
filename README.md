@@ -12,7 +12,13 @@
 > 
 > &mdash; Tom Hummel (@tphummel) [April 22, 2021](https://twitter.com/tphummel/status/1385226694647107585)
 
-## Development Quickstart (Mac OS)
+## Development Quickstart (Mac OSX)
+
+prerequisites: 
+
+- [homebrew](https://brew.sh)
+- [vagrant](https://vagrantup.sh)
+- [virtualbox](https://www.virtualbox.org/)
 
 ```
 git clone git@github.com:tphummel/CaNFlySLO.git
