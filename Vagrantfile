@@ -1,6 +1,6 @@
 # https://app.vagrantup.com/centos/boxes/8
 Vagrant.configure("2") do |config|
-  config.vm.box = "centos/8"
+  config.vm.box = "generic/rocky8"
 
   config.vm.provider "virtualbox" do |v|
     v.memory = 1024
