@@ -239,3 +239,59 @@ tap.test('GET /home without a session should get 401', function (t) {
     t.end()
   })
 })
+
+// GET /login/verify
+// sign a login token myself
+// get back session token
+// GET /home w/ cookie
+
+tap.test('Get session token, browse home', function (t) {
+  // we control the server process here
+  // so we can crib the token signing secrets
+  process.env.LOGIN_JWT_SECRET = uuidv4()
+  process.env.SESSION_JWT_SECRET = uuidv4()
+
+  const lib = require('./index')
+  const token = require('./app/token')
+  const dbfile = dbTestUtils.getFilename()
+  process.env.DBFILE = dbfile
+
+  const email = 'me@test.win'
+
+  waterfall([
+    (cb) => { dbTestUtils.setup(dbfile, cb) },
+    // gotcha: getPort doesn't use standard errback pattern, for reasons.
+    (stdout, stderr, cb) => { getPort((port) => { return cb(null, port) }) },
+    (port, cb) => {
+      const server = lib.start(lib.app, port, (err) => {
+        t.ifErr(err)
+
+        waterfall([
+          (c) => {
+            token.createLoginToken({ email }, c)
+          },
+          (token, c) => {
+            const loginVerifyUrl = `http://localhost:${port}/login/verify?token=${token}`
+            get({ url: loginVerifyUrl, followRedirects: false, method: 'GET' }, c)
+          },
+          (res, c) => {
+            t.equal(res.statusCode, 307)
+
+            let sessionCookie = res.headers['set-cookie']?.[0]
+            if (!sessionCookie) sessionCookie = 'sessionPayload=invalid'
+            const redirectTo = res.headers.location
+            const redirectUrl = `http://localhost:${port}${redirectTo}`
+            return get({ url: redirectUrl, headers: { cookie: sessionCookie } }, c)
+          }
+        ], (err, res) => {
+          t.ifErr(err)
+          t.equal(res.statusCode, 200)
+          server.close(cb)
+        })
+      })
+    }
+  ], (err) => {
+    t.ifErr(err)
+    t.end()
+  })
+})
