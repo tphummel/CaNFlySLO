@@ -30,9 +30,5 @@
     "standard": "^16.0.3",
     "tap": "^14.11.0"
   },
-  "standard": {
-    "ignore": [
-      "app/util/get-open-port.js"
-    ]
-  }
+  "standard": {}
 }
